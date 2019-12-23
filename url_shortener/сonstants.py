@@ -1,0 +1,1 @@
+TEXT_DELIMITER = "\u2122"

@@ -1,0 +1,35 @@
+{% extends 'url_shortener/base.html' %}
+{% block title %} {{ block.super }} - {{url.original_url}}{% endblock %}
+
+
+{% block content %}
+<div class="container">
+<h1 class="text-primary mb-3 mt-3"><a href="{{ url.original_url }}">{{ url.original_url }}</a></h1>
+<form action="{{ url.get_absolute_url }}" method="post">
+{% csrf_token %}
+{% for field in form %}
+  <div class="form-group">
+    {% if field.errors %}
+      <div class="alert-danger">
+          {{ field.errors }}
+      </div>
+        {% endif %}
+        {{ field.label }}
+        {{ field }}
+  </div>
+{% endfor %}
+<div class="mt-3 mb-3">
+<label>Created: </label>
+<input  type="button" value="{{url.created_at}}">
+</div>
+<div class="d-flex justify-content-between">
+  <div class="">
+    <button type="submit" class="btn btn-primary pl-5 pr-5">Save</button>
+    <a href="{% url 'main_page' %}" class="btn btn-light pl-5 pr-5">Cancel</a>
+  </div>
+  <div class="">
+    <a href="{{ url.get_delete_url }}" class="btn btn-danger pl-5 pr-5 ml-15 text-light">Delete</a>
+  </div>
+</div>
+</form>
+{% endblock %}

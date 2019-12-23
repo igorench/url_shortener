@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:$SERVER_PORT
+    environment:
+      - DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+    volumes:
+      - .:/url_shortener_engine
+    ports:
+      - "$SERVER_PORT:$SERVER_PORT"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "$REDIS_PORT:$REDIS_PORT"
+    privileged: true
+    sysctls:
+      net.core.somaxconn: "511"
+
+  celery:
+    build:
+      context: .
+    container_name: celery
+    volumes:
+      - .:/url_shortener_engine
+    command: /bin/bash -c "celery -A url_shortener_engine worker -B --loglevel=info "
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+      - PGHOST=$DATABASE_HOST

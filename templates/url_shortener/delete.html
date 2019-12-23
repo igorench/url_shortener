@@ -1,0 +1,19 @@
+{% extends 'url_shortener/base.html' %}
+
+{% block title %} {{ block.super }} delete - {{ url.original_url }} {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-5 text-center">Are you shure you want to delete <a href="{{ url.original_url }}">{{ url.original_url }}</a>?</h2>
+    <h3 class="text-center text-lg">Short url: <a href="{{ url.get_short_url }}">{{ url.short_url }}</a></h3>
+    <div class="d-flex justify-content-around align-items-end">
+        <form action="{{ url.get_delete_url }}" method="post">
+        {% csrf_token %}
+            <button type="submit" class="btn btn-danger mt-5">Delete</button>
+        </form>
+        <div class="">
+            <a href="{% url 'main_page' %}" class="btn btn-primary">Cancel</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

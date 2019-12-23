@@ -1,0 +1,74 @@
+{% extends 'url_shortener/base.html' %}
+
+{% block content %}
+<div class="container">
+<form class="mt-5 mb-5" method="post" action="{% url 'main_page' %}">
+{% csrf_token %}
+<div class="form-row d-flex">
+{% for field in form %}
+  <div class="form-group flex-fill">
+    <div class="col">
+    {% if field.errors %}
+        {% endif %}
+        {{ field }}
+        <div class="alert-danger">
+          {{ field.errors }}
+        </div>
+    </div>
+  </div>
+{% endfor %}
+<div class="col">
+  <button type="submit" class="btn btn-primary">Create short URL</button>
+</div>
+</div>
+</form>
+<table class="table">
+  <thead>
+    <tr class="bg-light">
+      <th scope="col">URL</th>
+      <th scope="col">Text</th>
+      <th scope="col">Clicks</th>
+      <th scope="col">Short URL</th>
+      <th scope="col">Created</th>
+      <th scope="col">Detail</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for url in urls %}
+    <tr>
+      <th><a href="{{ url.original_url }}" target="_blank">{{ url.original_url }}</a></th>
+      <td><div class="text-output">{{ url.text }}</div>...</td>
+      <td>{{ url.clicks }}</td>
+      <td><a href="{{ url.get_short_url }}" target="_blank">{{ url.short_url }}</a></td>
+      <td>{{ url.created_at }}</td>
+      <td><a class="btn btn-info text-light" href="{{ url.get_absolute_url }}">Detail</a></td>
+      <td><a class="btn btn-danger text-light" href="{{ url.get_delete_url }}">Delete</a><td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="d-flex justify-content-center">
+{% if urls.has_other_pages %}
+  <ul class="pagination">
+    {% if urls.has_previous %}
+      <li><a href="?page={{ urls.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in urls.paginator.page_range %}
+      {% if urls.number == i %}
+        <li class="active"><span>--{{ i }}-- <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if urls.has_next %}
+      <li><a href="?page={{ urls.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+{% endblock %}

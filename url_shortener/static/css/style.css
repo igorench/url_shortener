@@ -1,0 +1,10 @@
+.text-output {
+    height: 50px;
+    overflow: hidden;
+}
+
+.paginator-num {
+    padding: 5px;
+    background-color: blue;
+    color: #fff; 
+}
