@@ -1,15 +1,25 @@
-Development server
-Set environment variables
-cp .env.example .env
+# Development server
 
-Build docker
-docker-compose build
+- ### Set environment variables
 
-Run python migrations
-docker-compose run server python manage.py migrate
+  - `cp .env.example .env`
 
-Run docker
-docker-compose up
+- ### Build docker
 
-Create superuser
-docker-compose run server python manage.py createsuperuser
+  - `docker-compose build`
+
+- ### Install node modules
+
+  - `docker-compose run client yarn`
+
+- ### Run python migrations
+
+  - `docker-compose run server python manage.py migrate`
+
+- ### Run docker
+
+  - `docker-compose up`
+
+- ### Create superuser
+
+  - `docker-compose run server python manage.py createsuperuser`
